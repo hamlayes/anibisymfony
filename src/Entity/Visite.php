@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\This;
 
 #[ORM\Entity(repositoryClass: VisiteRepository::class)]
 class Visite
@@ -111,5 +112,16 @@ class Visite
         $this->expositions->removeElement($exposition);
 
         return $this;
+    }
+
+    public function calculerTarif():float
+    {
+        $total = 0;
+        foreach ($this->getExpositions() as $exposition)
+        {
+            $tarif = $this->nbVisiteursAdultes*$exposition->getTarifAdulte() + $this->nbVisiteursEnfants*$exposition->getTarifEnfant();
+            $total = $total+$tarif;
+        }
+        return $total;
     }
 }
